@@ -92,6 +92,27 @@ python scripts/check_causality.py                              # proves the CAUS
 python scripts/analyze_results.py --weights lgb=0.3 xgb=0.5 cat=0.2   # error analysis (causal config)
 ```
 
+### Running on Kaggle
+
+`config.py` detects `/kaggle/input` and resolves the three CSVs by searching
+under it (`train.csv`, `test.csv` or `test(1).csv`, `sample_submission.csv`),
+and writes all outputs (`results/`, `models/`, `submission.csv`) to
+`/kaggle/working`.  Steps:
+
+1. Add the competition data as an input of the Kaggle notebook.
+2. Add this repository as an input too (upload it as a Kaggle *dataset*, or
+   with internet enabled run `!git clone <repo-url> /kaggle/working/repo` in a
+   first cell).  The notebook's setup cell finds the folder that contains `src/`,
+   adds it to `sys.path`, and copies the saved `results/` (per-library test
+   predictions) into `/kaggle/working/results`.
+3. Run `PM25_next_hour_forecast.ipynb`.  With `RUN_TRAINING = False` it rebuilds
+   `submission.csv` from the saved per-library predictions in ~1 minute; with
+   `RUN_TRAINING = True` it retrains everything (~45 min on 4 cores, longer than
+   the 10-core laptop timing above).
+
+Anywhere else, `DATA_DIR=/path/to/csvs WORK_DIR=/path/for/outputs` override the
+locations for both the notebook and the scripts.
+
 Random seeds: `config.SEED = 42` for every library (LightGBM `seed`,
 `bagging_seed`, `feature_fraction_seed`; XGBoost `seed`; CatBoost `random_seed`).
 Thread count: `N_THREADS` env var (default 10) — only affects speed.

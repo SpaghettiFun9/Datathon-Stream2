@@ -11,13 +11,40 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 
 # ---------------------------------------------------------------- data files
-TRAIN_CSV = ROOT / "train.csv"
-TEST_CSV = ROOT / "test(1).csv"          # file name as delivered by the organisers
-SAMPLE_SUBMISSION_CSV = ROOT / "sample_submission.csv"
+# Paths resolve in this order:
+#   1. environment variables DATA_DIR (where the three CSVs live) / WORK_DIR (outputs)
+#   2. Kaggle: the CSVs are searched under /kaggle/input/** and outputs go to /kaggle/working
+#   3. local checkout: CSVs and outputs live next to this file
+KAGGLE_INPUT = Path("/kaggle/input")
+ON_KAGGLE = KAGGLE_INPUT.exists()
 
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
-SUBMISSION_CSV = ROOT / "submission.csv"
+
+def _find_input(*names):
+    """First file under /kaggle/input (any depth) whose name is one of `names`."""
+    for name in names:
+        hits = sorted(p for p in KAGGLE_INPUT.rglob(name) if p.is_file())
+        if hits:
+            return hits[0]
+    raise FileNotFoundError(f"none of {names} found under {KAGGLE_INPUT}; set DATA_DIR")
+
+
+if os.environ.get("DATA_DIR"):
+    _D = Path(os.environ["DATA_DIR"])
+    TRAIN_CSV, SAMPLE_SUBMISSION_CSV = _D / "train.csv", _D / "sample_submission.csv"
+    TEST_CSV = _D / "test.csv" if (_D / "test.csv").exists() else _D / "test(1).csv"
+elif ON_KAGGLE:
+    TRAIN_CSV = _find_input("train.csv")
+    TEST_CSV = _find_input("test.csv", "test(1).csv")
+    SAMPLE_SUBMISSION_CSV = _find_input("sample_submission.csv")
+else:
+    TRAIN_CSV = ROOT / "train.csv"
+    TEST_CSV = ROOT / "test(1).csv"          # file name as delivered by the organisers
+    SAMPLE_SUBMISSION_CSV = ROOT / "sample_submission.csv"
+
+WORK = Path(os.environ["WORK_DIR"]) if os.environ.get("WORK_DIR") else (Path("/kaggle/working") if ON_KAGGLE else ROOT)
+RESULTS_DIR = WORK / "results"
+MODELS_DIR = WORK / "models"
+SUBMISSION_CSV = WORK / "submission.csv"
 
 # ---------------------------------------------------------------- reproducibility
 SEED = 42
