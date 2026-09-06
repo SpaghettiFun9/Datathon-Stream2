@@ -8,8 +8,10 @@ leaderboard without touching `submission.csv`.
 
 | candidate | what changes vs. `main` | status | file |
 |---|---|---|---|
-| 2-way blend | adds the XGBoost member (1,500 rounds, 3 seeds), 0.5 / 0.5; fold-1 validation LightGBM 22.60, XGBoost 22.49 | **ready** | `results/experiments/submission_LS_lgb_xgb.csv` |
-| 3-way blend | adds CatBoost (1,800 rounds) as well, equal weights; fold-1 validation of the 3-way average 22.24 | **ready** | `results/experiments/submission_LS_3way.csv` |
+| 2-way blend | adds the XGBoost member (1,500 rounds, 3 seeds), 0.5 / 0.5; fold-1 validation LightGBM 22.60, XGBoost 22.49 | ready | `results/experiments/submission_LS_lgb_xgb.csv` |
+| 3-way blend | adds CatBoost (1,800 rounds) as well, equal weights; fold-1 validation of the 3-way average 22.24 | **ready; public LB 17.94365** | `results/experiments/submission_LS_3way.csv` |
+| weighted 3-way | weights 0.25 / 0.30 / 0.45 from a grid search on the fold-1 validation predictions (22.231 vs 22.242 equal) | **ready** | `results/experiments/submission_LS_w25_30_45.csv` |
+| 5-seed members | XGBoost and CatBoost with 2 extra seeds (11, 23) averaged into the weighted blend | in progress | `results/experiments/submission_LS_w_5seed.csv` |
 | long context | `--lead-long` (12/24 h leads, forward means, 25 h centred means, +58 features) and stage-1 nowcast trained for 1,000 rounds instead of 350 | implemented; full-data fit stopped at the deadline (stage 1 alone takes ~25 min); validation not run | — |
 
 Commands (branch `improve`):
