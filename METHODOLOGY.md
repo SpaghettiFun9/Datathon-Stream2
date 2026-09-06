@@ -234,7 +234,7 @@ features).  The two are kept as separate, fully reproducible variants:
 | | uses rows after *t*? | validation (pooled) | public LB |
 |---|---|---|---|
 | causal, variant A + stacking | no (`scripts/check_causality.py`) | 26.42 | 23.43549 |
-| adjacent-row, variant L + stacking (**submitted**) | yes, *t+1 … t+6* | ≈ 20.5 (LightGBM member, pooled; fold 1 = 22.24 for the 3-library average, fold 2 = 18.08 for LightGBM) | (fill in from the leaderboard) |
+| adjacent-row, variant L + stacking (**submitted**) | yes, *t+1 … t+6* | ≈ 20.5 (LightGBM member, pooled; fold 1 = 22.24 for the 3-library average, fold 2 = 18.08 for LightGBM) | **17.95550 (1st)** |
 
 For an operational early-warning system only the causal model is applicable;
 its §8 findings are the ones that transfer.  The adjacent-row model answers a

@@ -4,8 +4,9 @@ Forecast `PM2_5_next_hour` (µg/m³) one hour ahead at 12 Beijing monitoring
 stations, scored by RMSE on a hidden, chronologically later test period
 (Sep 2016 – Feb 2017).
 
-**Final leaderboard submission:** `submission.csv`, produced by
-`scripts/run_final.py` with the exact command in "Reproduce" below.
+**Final leaderboard submission:** `submission.csv` (public leaderboard
+**17.95550**, 1st place at submission time), produced by `scripts/run_final.py`
+with the exact command in "Reproduce" below.
 It is the **adjacent-row ("lead") model**: for the row observed at hour *t* it
 also uses the pollutant/weather readings recorded at *t+1 … t+6* in the test
 file (see "Two model families" below - this is stated up front because it is
@@ -85,7 +86,7 @@ Thread count: `N_THREADS` env var (default 10) — only affects speed.
 | information used for the row at hour *t* | readings at *t* and earlier, all stations | additionally the readings at *t+1 … t+6* (same and other stations) that appear as later rows of the same file |
 | what it is | a real-time one-hour-ahead forecast | a two-sided *estimate* of PM2.5 at *t+1* from the readings taken around that hour (a smoother / nowcast at the target hour) |
 | season-matched validation RMSE | 26.42 | ≈ 20.5 (LightGBM member, pooled; fold 1 = 22.24 for the 3-library average, fold 2 = 18.08 for LightGBM) |
-| public leaderboard | 23.43549 | (fill in from the leaderboard) |
+| public leaderboard | 23.43549 | **17.95550 (1st)** |
 
 We built the causal model first and it is fully documented; the adjacent-row
 model reuses the same pipeline with the lead features switched on
