@@ -100,11 +100,13 @@ and writes all outputs (`results/`, `models/`, `submission.csv`) to
 `/kaggle/working`.  Steps:
 
 1. Add the competition data as an input of the Kaggle notebook.
-2. Add this repository as an input too (upload it as a Kaggle *dataset*, or
-   with internet enabled run `!git clone <repo-url> /kaggle/working/repo` in a
-   first cell).  The notebook's setup cell finds the folder that contains `src/`,
-   adds it to `sys.path`, and copies the saved `results/` (per-library test
-   predictions) into `/kaggle/working/results`.
+2. Make the code available in one of two ways: **either** turn the notebook's
+   *Internet* toggle on (the setup cell then clones this public repository into
+   `/kaggle/working/repo` by itself), **or** add the repository as a Kaggle
+   *dataset* input (any nesting depth).  The setup cell searches
+   `/kaggle/input` and `/kaggle/working` for the folder that contains `src/` and
+   `config.py`, adds it to `sys.path`, and copies the saved `results/`
+   (per-library test predictions) into `/kaggle/working/results`.
 3. Run `PM25_next_hour_forecast.ipynb`.  With `RUN_TRAINING = False` it rebuilds
    `submission.csv` from the saved per-library predictions in ~1 minute; with
    `RUN_TRAINING = True` it retrains everything (~45 min on 4 cores, longer than
