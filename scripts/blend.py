@@ -20,5 +20,7 @@ for m, w in W.items():
     p = pd.read_csv(C.RESULTS_DIR / f"testpred_{a.tag}_{m}.csv")
     out[C.TARGET] += w * ss.merge(p, on="id", how="left")[C.TARGET].to_numpy()
 assert out[C.TARGET].notna().all() and len(out) == len(ss)
+# guard against a member silently dropping out (weights must all have been applied)
+assert 60 < out[C.TARGET].mean() < 130, f"implausible blend mean {out[C.TARGET].mean():.1f}: a member is missing"
 out.to_csv(a.out, index=False)
 print(f"[blend] {a.tag} {W} -> {a.out}: mean={out[C.TARGET].mean():.2f} std={out[C.TARGET].std():.2f}")
