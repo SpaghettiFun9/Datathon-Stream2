@@ -70,10 +70,12 @@ present state of the aerosol from the co-measured pollutants (PM10, CO, NO2,
 SO2, O3), weather, wind and their recent history, then project it one hour
 ahead.  Every temporal feature is computed on a complete hourly grid per
 station so that lags never bridge a real gap.  Cross-station statistics at the
-same hour capture city-wide pollution episodes.  A first-stage model
-*nowcasts* the current PM2.5 (its label is reconstructed from the previous
-row's target) and its out-of-fold estimates feed the second-stage forecaster,
-which avoids the exposure bias that sinks a naive recursive model.
+same hour capture city-wide pollution episodes.  A first-stage
+ensemble (LightGBM + XGBoost, out-of-fold) *nowcasts* the current PM2.5 (its
+label is reconstructed from the previous row's target); the ensemble mean feeds
+the second-stage forecaster while the cross-model disagreement provides
+nowcast-uncertainty features.  This avoids the exposure bias that sinks a
+naive recursive model.
 Validation uses two season-matched folds (train strictly before, validate on
 the following Sep–Feb) because the test period is autumn/winter while the last
 months of train are summer.  The final model is a weighted average of
