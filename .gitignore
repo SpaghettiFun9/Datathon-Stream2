@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 models/
 results/valpred_*.csv
+results/experiments/submission_rerun.csv
 nohup.out
 results/experiments/submission_rerun.csv
 results/log_final_AS_rerun.txt
