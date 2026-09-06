@@ -1,0 +1,18 @@
+[verify] train rows=360,954  test rows=51,063  stations=12
+[verify] train span 2013-03-01 00:00:00 -> 2016-08-31 22:00:00
+[verify] test  span 2016-08-31 23:00:00 -> 2017-02-28 22:00:00
+[verify] consecutive rows exactly 1h apart: 0.9931
+[verify] all continuity checks passed
+    stage1 block 0: trained on 115,884 -> nowcast 38,750 rows
+    stage1 block 1: trained on 115,886 -> nowcast 38,679 rows
+    stage1 block 2: trained on 115,885 -> nowcast 38,878 rows
+    stage1 block 3: trained on 115,872 -> nowcast 38,883 rows
+  [stack] F1_2014-15 stage-1 nowcast RMSE on val: 22.864
+[stack] F1_2014-15: RMSE=26.3306 top5%=60.51 iters=99 (150s)
+    stage1 block 0: trained on 192,314 -> nowcast 64,262 rows
+    stage1 block 1: trained on 192,315 -> nowcast 64,479 rows
+    stage1 block 2: trained on 192,316 -> nowcast 64,628 rows
+    stage1 block 3: trained on 192,300 -> nowcast 64,558 rows
+  [stack] F2_2015-16 stage-1 nowcast RMSE on val: 21.374
+[stack] F2_2015-16: RMSE=27.2679 top5%=94.61 iters=925 (250s)
+[stack] MEAN RMSE=26.7993

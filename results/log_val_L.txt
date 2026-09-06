@@ -1,0 +1,13 @@
+[verify] train rows=360,954  test rows=51,063  stations=12
+[verify] train span 2013-03-01 00:00:00 -> 2016-08-31 22:00:00
+[verify] test  span 2016-08-31 23:00:00 -> 2017-02-28 22:00:00
+[verify] consecutive rows exactly 1h apart: 0.9931
+[verify] all continuity checks passed
+[features] built 216 base + 9 pm25 + 31 lead features in 2.3s
+[recursive] buffer features match vectorised features on 400 hours
+[L_base+lead] F1_2014-15: RMSE=22.9828  top5%=53.11 top1%=72.76  iters=764  (48.7s)
+[L_base+lead] F2_2015-16: RMSE=23.4452  top5%=83.75 top1%=149.26  iters=517  (41.9s)
+[L_base+lead] mean fold RMSE = 23.2140   pooled = 23.2164
+[Alog_base_log1p] F1_2014-15: RMSE=26.5661  top5%=63.07 top1%=91.62  iters=270  (16.7s)
+[Alog_base_log1p] F2_2015-16: RMSE=33.6092  top5%=125.29 top1%=226.39  iters=304  (18.1s)
+[Alog_base_log1p] mean fold RMSE = 30.0876   pooled = 30.3118

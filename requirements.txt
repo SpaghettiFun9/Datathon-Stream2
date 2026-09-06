@@ -1,0 +1,10 @@
+# Tested with Python 3.14.4 on macOS (arm64).  Any Python >= 3.10 should work.
+pandas==3.0.2
+numpy==2.4.4
+scikit-learn==1.8.0
+lightgbm==4.7.0
+xgboost==3.4.1
+catboost==1.2.10
+scipy==1.17.1
+matplotlib==3.10.8
+tabulate==0.10.0

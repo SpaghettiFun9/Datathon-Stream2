@@ -1,0 +1,9 @@
+[verify] train rows=360,954  test rows=51,063  stations=12
+[verify] train span 2013-03-01 00:00:00 -> 2016-08-31 22:00:00
+[verify] test  span 2016-08-31 23:00:00 -> 2017-02-28 22:00:00
+[verify] consecutive rows exactly 1h apart: 0.9931
+[verify] all continuity checks passed
+[recursive] buffer features match vectorised features on 400 hours
+[final] variant=L models=['lgb'] weights=[1.0] features=308 rounds={'lgb': 1500} seeds=[42]
+[final] lgb seed 42 trained in 179s
+[final] wrote results/experiments/submission_lead_features.csv: 51,063 rows; mean=93.17 std=98.22 min=0.00 max=779.02

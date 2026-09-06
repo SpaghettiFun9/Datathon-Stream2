@@ -1,0 +1,18 @@
+[sweep:ref_lr05] F1_2014-15 RMSE=26.5998 iters=335 (19s)
+[sweep:ref_lr05] F2_2015-16 RMSE=30.6751 iters=177 (22s)
+[sweep:ref_lr05] MEAN RMSE=28.6374
+[sweep:reg_small] F1_2014-15 RMSE=26.6080 iters=544 (18s)
+[sweep:reg_small] F2_2015-16 RMSE=30.7082 iters=679 (25s)
+[sweep:reg_small] MEAN RMSE=28.6581
+[sweep:reg_big] F1_2014-15 RMSE=26.6018 iters=110 (18s)
+[sweep:reg_big] F2_2015-16 RMSE=30.2671 iters=623 (54s)
+[sweep:reg_big] MEAN RMSE=28.4344
+[sweep:no_season] F1_2014-15 RMSE=26.6503 iters=273 (22s)
+[sweep:no_season] F2_2015-16 RMSE=28.5050 iters=316 (27s)
+[sweep:no_season] MEAN RMSE=27.5776
+[sweep:winter_w2] F1_2014-15 RMSE=26.8117 iters=236 (16s)
+[sweep:winter_w2] F2_2015-16 RMSE=30.2406 iters=236 (20s)
+[sweep:winter_w2] MEAN RMSE=28.5262
+[sweep:reg_small_ws] F1_2014-15 RMSE=26.5871 iters=595 (18s)
+[sweep:reg_small_ws] F2_2015-16 RMSE=28.5442 iters=464 (17s)
+[sweep:reg_small_ws] MEAN RMSE=27.5656

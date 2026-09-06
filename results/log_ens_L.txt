@@ -1,0 +1,6 @@
+[ens:L] F1_2014-15 lgb: RMSE=23.1681 iters=98 (34s)
+[ens:L] F1_2014-15 AVG: RMSE=23.1681 top5%=56.49
+[ens:L] F2_2015-16 lgb: RMSE=20.0390 iters=2394 (302s)
+[ens:L] F2_2015-16 AVG: RMSE=20.0390 top5%=71.39
+[ens:L] pooled individual {'lgb': 21.65169152620604}
+[ens:L] pooled equal-avg RMSE=21.6517; best weights {'lgb': np.float64(1.0)} -> 21.6517

@@ -1,0 +1,22 @@
+[verify] train rows=360,954  test rows=51,063  stations=12
+[verify] train span 2013-03-01 00:00:00 -> 2016-08-31 22:00:00
+[verify] test  span 2016-08-31 23:00:00 -> 2017-02-28 22:00:00
+[verify] consecutive rows exactly 1h apart: 0.9931
+[verify] all continuity checks passed
+[recursive] buffer features match vectorised features on 400 hours
+[final] variant=A models=['lgb', 'xgb', 'cat'] weights=[0.3, 0.5, 0.2] features=212 rounds={'lgb': 1000, 'xgb': 700, 'cat': 1300} seeds=[42, 7, 2024]
+    [stage1] block 0: fit on 268,866 rows -> out-of-fold nowcast for 89,809
+    [stage1] block 1: fit on 268,848 rows -> out-of-fold nowcast for 90,283
+    [stage1] block 2: fit on 268,866 rows -> out-of-fold nowcast for 90,433
+    [stage1] block 3: fit on 268,848 rows -> out-of-fold nowcast for 90,429
+[final] stage-1 nowcast features added in 141s -> 222 features
+[final] lgb seed 42 trained in 69s
+[final] lgb seed 7 trained in 70s
+[final] lgb seed 2024 trained in 69s
+[final] xgb seed 42 trained in 24s
+[final] xgb seed 7 trained in 25s
+[final] xgb seed 2024 trained in 24s
+[final] cat seed 42 trained in 55s
+[final] cat seed 7 trained in 54s
+[final] cat seed 2024 trained in 58s
+[final] wrote /Users/kevinphan/Desktop/hackathons/Datathon-Stream2/submission.csv: 51,063 rows; mean=93.01 std=95.95 min=0.02 max=674.88

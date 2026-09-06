@@ -1,0 +1,9 @@
+[sweep:reg_big_ns] F1_2014-15 RMSE=26.5490 iters=593 (57s)
+[sweep:reg_big_ns] F2_2015-16 RMSE=28.6324 iters=590 (67s)
+[sweep:reg_big_ns] MEAN RMSE=27.5907
+[sweep:reg_big_ns_w2] F1_2014-15 RMSE=26.4902 iters=564 (49s)
+[sweep:reg_big_ns_w2] F2_2015-16 RMSE=28.2791 iters=744 (97s)
+[sweep:reg_big_ns_w2] MEAN RMSE=27.3847
+[sweep:ns_no_dow] F1_2014-15 RMSE=26.6273 iters=290 (31s)
+[sweep:ns_no_dow] F2_2015-16 RMSE=28.7901 iters=361 (50s)
+[sweep:ns_no_dow] MEAN RMSE=27.7087

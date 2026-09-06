@@ -1,0 +1,255 @@
+{
+  "ref_lr05": {
+    "config": {
+      "params": {},
+      "drop": [],
+      "winter_w": 1.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.59978051421974,
+        "best_iter": 335,
+        "sec": 19
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 30.67505814842535,
+        "best_iter": 177,
+        "sec": 22
+      }
+    ],
+    "mean_rmse": 28.637419331322548
+  },
+  "reg_small": {
+    "config": {
+      "params": {
+        "num_leaves": 63,
+        "min_data_in_leaf": 300,
+        "feature_fraction": 0.3,
+        "lambda_l2": 10.0
+      },
+      "drop": [],
+      "winter_w": 1.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.60795742152864,
+        "best_iter": 544,
+        "sec": 18
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 30.708166341336913,
+        "best_iter": 679,
+        "sec": 25
+      }
+    ],
+    "mean_rmse": 28.658061881432776
+  },
+  "reg_big": {
+    "config": {
+      "params": {
+        "num_leaves": 255,
+        "min_data_in_leaf": 200,
+        "feature_fraction": 0.4,
+        "lambda_l2": 10.0,
+        "learning_rate": 0.03
+      },
+      "drop": [],
+      "winter_w": 1.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.60178277516266,
+        "best_iter": 110,
+        "sec": 18
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 30.26711393620522,
+        "best_iter": 623,
+        "sec": 54
+      }
+    ],
+    "mean_rmse": 28.43444835568394
+  },
+  "no_season": {
+    "config": {
+      "params": {},
+      "drop": [
+        "month",
+        "doy_sin",
+        "doy_cos",
+        "heating_season"
+      ],
+      "winter_w": 1.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.650287042157945,
+        "best_iter": 273,
+        "sec": 22
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 28.504999747904172,
+        "best_iter": 316,
+        "sec": 27
+      }
+    ],
+    "mean_rmse": 27.57764339503106
+  },
+  "winter_w2": {
+    "config": {
+      "params": {},
+      "drop": [],
+      "winter_w": 2.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.811746772630897,
+        "best_iter": 236,
+        "sec": 16
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 30.24059493687557,
+        "best_iter": 236,
+        "sec": 20
+      }
+    ],
+    "mean_rmse": 28.526170854753232
+  },
+  "reg_small_ws": {
+    "config": {
+      "params": {
+        "num_leaves": 63,
+        "min_data_in_leaf": 300,
+        "feature_fraction": 0.3,
+        "lambda_l2": 10.0
+      },
+      "drop": [
+        "month",
+        "doy_sin",
+        "doy_cos",
+        "heating_season"
+      ],
+      "winter_w": 2.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.587138791083667,
+        "best_iter": 595,
+        "sec": 18
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 28.544159479725995,
+        "best_iter": 464,
+        "sec": 17
+      }
+    ],
+    "mean_rmse": 27.565649135404833
+  },
+  "reg_big_ns": {
+    "config": {
+      "params": {
+        "num_leaves": 255,
+        "min_data_in_leaf": 200,
+        "feature_fraction": 0.4,
+        "lambda_l2": 10.0,
+        "learning_rate": 0.03
+      },
+      "drop": [
+        "month",
+        "doy_sin",
+        "doy_cos",
+        "heating_season"
+      ],
+      "winter_w": 1.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.54901101247037,
+        "best_iter": 593,
+        "sec": 57
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 28.632421078823185,
+        "best_iter": 590,
+        "sec": 67
+      }
+    ],
+    "mean_rmse": 27.59071604564678
+  },
+  "reg_big_ns_w2": {
+    "config": {
+      "params": {
+        "num_leaves": 255,
+        "min_data_in_leaf": 200,
+        "feature_fraction": 0.4,
+        "lambda_l2": 10.0,
+        "learning_rate": 0.03
+      },
+      "drop": [
+        "month",
+        "doy_sin",
+        "doy_cos",
+        "heating_season"
+      ],
+      "winter_w": 2.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.490249485463973,
+        "best_iter": 564,
+        "sec": 49
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 28.279053222106285,
+        "best_iter": 744,
+        "sec": 97
+      }
+    ],
+    "mean_rmse": 27.38465135378513
+  },
+  "ns_no_dow": {
+    "config": {
+      "params": {},
+      "drop": [
+        "month",
+        "doy_sin",
+        "doy_cos",
+        "heating_season",
+        "dow",
+        "is_weekend"
+      ],
+      "winter_w": 1.0
+    },
+    "folds": [
+      {
+        "fold": "F1_2014-15",
+        "rmse": 26.627324634140194,
+        "best_iter": 290,
+        "sec": 31
+      },
+      {
+        "fold": "F2_2015-16",
+        "rmse": 28.790145313297515,
+        "best_iter": 361,
+        "sec": 50
+      }
+    ],
+    "mean_rmse": 27.708734973718855
+  }
+}

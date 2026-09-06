@@ -1,0 +1,18 @@
+    [stage1] block 0: fit on 115,884 rows -> out-of-fold nowcast for 38,750
+    [stage1] block 1: fit on 115,886 rows -> out-of-fold nowcast for 38,679
+    [stage1] block 2: fit on 115,885 rows -> out-of-fold nowcast for 38,878
+    [stage1] block 3: fit on 115,872 rows -> out-of-fold nowcast for 38,883
+[ens:AS] F1_2014-15 lgb: RMSE=26.2240 iters=99 (13s)
+[ens:AS] F1_2014-15 xgb: RMSE=26.1413 iters=106 (10s)
+[ens:AS] F1_2014-15 cat: RMSE=26.1698 iters=730 (52s)
+[ens:AS] F1_2014-15 AVG: RMSE=25.8730 top5%=57.89
+    [stage1] block 0: fit on 192,314 rows -> out-of-fold nowcast for 64,262
+    [stage1] block 1: fit on 192,315 rows -> out-of-fold nowcast for 64,479
+    [stage1] block 2: fit on 192,316 rows -> out-of-fold nowcast for 64,628
+    [stage1] block 3: fit on 192,300 rows -> out-of-fold nowcast for 64,558
+[ens:AS] F2_2015-16 lgb: RMSE=27.0270 iters=922 (95s)
+[ens:AS] F2_2015-16 xgb: RMSE=26.7932 iters=604 (41s)
+[ens:AS] F2_2015-16 cat: RMSE=27.9871 iters=1187 (105s)
+[ens:AS] F2_2015-16 AVG: RMSE=27.0374 top5%=93.37
+[ens:AS] pooled individual {'lgb': 26.63064530524257, 'xgb': 26.47102960271297, 'cat': 27.098585854802128}
+[ens:AS] pooled equal-avg RMSE=26.4647; best weights {'lgb': np.float64(0.2), 'xgb': np.float64(0.6), 'cat': np.float64(0.2)} -> 26.4203

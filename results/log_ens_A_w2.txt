@@ -1,0 +1,10 @@
+[ens:A] F1_2014-15 lgb: RMSE=26.4902 iters=564 (61s)
+[ens:A] F1_2014-15 xgb: RMSE=26.6388 iters=640 (28s)
+[ens:A] F1_2014-15 cat: RMSE=26.2317 iters=1468 (96s)
+[ens:A] F1_2014-15 AVG: RMSE=26.1052 top5%=57.22
+[ens:A] F2_2015-16 lgb: RMSE=28.2791 iters=744 (65s)
+[ens:A] F2_2015-16 xgb: RMSE=28.6893 iters=515 (34s)
+[ens:A] F2_2015-16 cat: RMSE=30.1004 iters=728 (70s)
+[ens:A] F2_2015-16 AVG: RMSE=28.7414 top5%=103.43
+[ens:A] pooled individual {'lgb': 27.40406613448481, 'xgb': 27.688533423410416, 'cat': 28.242783125257738}
+[ens:A] pooled equal-avg RMSE=27.4621; best weights {'lgb': np.float64(0.8), 'xgb': np.float64(0.1), 'cat': np.float64(0.1)} -> 27.3604
