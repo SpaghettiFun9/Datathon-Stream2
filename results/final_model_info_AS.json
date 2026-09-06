@@ -299,7 +299,7 @@
     "nc_dev24",
     "nc_minus_pm10"
   ],
-  "output": "/Users/kevinphan/Desktop/hackathons/Datathon-Stream2/submission.csv",
+  "output": "results/experiments/submission_rerun.csv",
   "per_model_test_mean": {
     "lgb": 92.87554095927389,
     "xgb": 93.0416030883789,

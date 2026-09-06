@@ -43,7 +43,7 @@
 * No rows are dropped; no outliers are clipped (the extreme values are real
   pollution events and exactly what RMSE cares about).
 
-## 3. Feature engineering (`src/features.py`, 212 features)
+## 3. Feature engineering (`src/features.py`, 212 base features + 10 stacked)
 
 | family | features |
 |---|---|
@@ -53,6 +53,7 @@
 | weather history | TEMP/PRES/DEWP/WSPM: lags 1/3 h, differences 1/3/24 h, rolling mean 6/24 h; rain sums 6/24 h; 6 h mean wind vector; 6 h max wind |
 | cross-station (same hour) | for each pollutant: mean/max/min/std over the 12 stations, station deviation from the city mean, city-mean lags 1/3/6 h, 1 h change, city-mean rolling 6/24 h; number of stations reporting |
 | reconstructed PM2.5 history (variant B only) | lag 1/2/3, rolling mean 3/6/24, rolling max 6, 1 h change, deviation from 24 h mean — all derived from the previous rows' targets |
+| stage-1 nowcast (final model, +10, `src/stacking.py`) | out-of-fold estimate of PM2.5 at the observation hour, its lags 1/2/3 h, rolling means 3/6/24 h, 1 h change, deviation from the 24 h mean, estimate minus PM10 — computed on the same hourly grid |
 
 ## 4. Validation strategy
 
