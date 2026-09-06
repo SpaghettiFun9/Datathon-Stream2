@@ -1,0 +1,14 @@
+[verify] train rows=360,954  test rows=51,063  stations=12
+[verify] train span 2013-03-01 00:00:00 -> 2016-08-31 22:00:00
+[verify] test  span 2016-08-31 23:00:00 -> 2017-02-28 22:00:00
+[verify] consecutive rows exactly 1h apart: 0.9931
+[verify] all continuity checks passed
+[recursive] buffer features match vectorised features on 400 hours
+[final] variant=L models=['xgb', 'cat'] weights=[0.5, 0.5] features=308 rounds={'xgb': 1500, 'cat': 1800} seeds=[11, 23]
+    [stage1] block 0: fit on 268,866 rows -> out-of-fold nowcast for 89,809
+    [stage1] block 1: fit on 268,848 rows -> out-of-fold nowcast for 90,283
+    [stage1] block 2: fit on 268,866 rows -> out-of-fold nowcast for 90,433
+    [stage1] block 3: fit on 268,848 rows -> out-of-fold nowcast for 90,429
+[final] stage-1 nowcast features added in 156s -> 330 features
+[final] xgb seed 11 trained in 121s
+[final] xgb seed 23 trained in 118s
