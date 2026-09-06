@@ -4,9 +4,18 @@ Forecast `PM2_5_next_hour` (µg/m³) one hour ahead at 12 Beijing monitoring
 stations, scored by RMSE on a hidden, chronologically later test period
 (Sep 2016 – Feb 2017).
 
-**Final leaderboard submission:** `submission.csv` (public leaderboard
-**17.95550**, 1st place at submission time), produced by `scripts/run_final.py`
-with the exact command in "Reproduce" below.
+**Start with `PM25_next_hour_forecast.ipynb`** — the methodology report and
+the orchestration of the complete source code in one notebook (13 sections:
+data understanding → preprocessing → features → validation → models → final
+blend → submission → results → disclosure).
+
+**Final leaderboard submission:** `submission.csv` = adjacent-row stacked
+model, 0.65 LightGBM + 0.35 CatBoost (5 seeds), weights inferred from the
+public scores of three earlier blends (`IMPROVEMENTS.md`).  Earlier scored
+files are kept, named by score: `results/experiments/submission_LS_lgb_only_LB17.95550.csv`
+(LightGBM alone, 1st place at the time), `submission_LS_3way_LB17.94365.csv`,
+`submission_LS_lgb_xgb_LB18.04513.csv`, and the causal model
+`submission_causal_LB23.43549.csv`.
 It is the **adjacent-row ("lead") model**: for the row observed at hour *t* it
 also uses the pollutant/weather readings recorded at *t+1 … t+6* in the test
 file (see "Two model families" below - this is stated up front because it is
@@ -37,7 +46,10 @@ scripts/analyze_results.py  per-station / per-hour / tail error analysis -> resu
 scripts/check_causality.py  asserts that no submitted feature depends on later rows
 scripts/run_final.py        train on ALL train rows, predict test, write the submission
 results/             validation logs, JSON summaries, feature importances
-submission.csv       FINAL submission (adjacent-row model, variant L + stacking)
+PM25_next_hour_forecast.ipynb   methodology report + code orchestration (read this first)
+IMPROVEMENTS.md      blend candidates and the leaderboard-based weight inference
+scripts/blend.py, scripts/blend_seeds.py   blend saved per-library test predictions
+submission.csv       FINAL submission (adjacent-row model, variant L + stacking, 0.65 LGB / 0.35 Cat)
 results/experiments/ submission_causal_LB23.43549.csv (causal model, LB 23.43549) and other experiment outputs
 ```
 
@@ -48,11 +60,16 @@ deterministically from the raw CSVs by `src/features.py` in ~2 seconds.
 
 ```bash
 pip install -r requirements.txt          # Python >= 3.10; tested on 3.14.4 / macOS arm64
-python scripts/run_final.py --variant L --stack --models lgb --rounds lgb=2000 --seeds 42 7 2024
+python scripts/run_final.py --variant L --stack --models lgb xgb cat --rounds lgb=2000 xgb=1500 cat=1800 --weights 0.34 0.33 0.33 --seeds 42 7 2024 --out results/experiments/submission_LS_3way_LB17.94365.csv
+python scripts/run_final.py --variant L --stack --models xgb cat --rounds xgb=1500 cat=1800 --seeds 11 23 --tag _s2 --out results/experiments/submission_LS_s2_only.csv
+python scripts/blend_seeds.py --member lgb=LS:3 --member cat=LS:3,LS_s2:2 --weights lgb=0.65 cat=0.35 --out submission.csv
 ```
 
-That single command (about 40 minutes on a 10-core laptop) regenerates
-`submission.csv` (same seeds and thread settings as the causal variant, which was verified byte-identical across two runs; the adjacent-row run itself was executed once before the deadline).
+The two training commands (about 45 minutes in total on a 10-core laptop)
+write the per-library test predictions `results/testpred_LS*_{lgb,xgb,cat}.csv`
+(kept in the repository); the blend command turns them into `submission.csv`
+(`python scripts/blend.py --tag LS --weights lgb=1.0` reproduces the 17.95550
+file, `... lgb=0.34 xgb=0.33 cat=0.33` the 17.94365 file).
 
 The causal model (`results/experiments/submission_causal_LB23.43549.csv`) is
 
