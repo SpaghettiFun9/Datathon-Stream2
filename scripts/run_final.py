@@ -48,6 +48,9 @@ def main():
     ap.add_argument("--transform", default="identity", choices=["identity", "log1p"])
     ap.add_argument("--out", default=str(C.SUBMISSION_CSV))
     ap.add_argument("--stack", action="store_true", help="add out-of-fold nowcast (stage-1) features, see src/stacking.py")
+    ap.add_argument("--lead-long", action="store_true", help="variant L: longer forward context features")
+    ap.add_argument("--stage1-rounds", type=int, default=None, help="override stage-1 nowcast rounds (default 350)")
+    ap.add_argument("--tag", default="", help="suffix for per-library prediction files")
     args = ap.parse_args()
     rounds = parse_rounds(args.rounds)
     weights = args.weights or [1.0 / len(args.models)] * len(args.models)
@@ -55,7 +58,7 @@ def main():
     C.MODELS_DIR.mkdir(exist_ok=True); C.RESULTS_DIR.mkdir(exist_ok=True)
 
     df = load_all(); verify(df)
-    data, F = build_features(df, use_lead=(args.variant == "L"))
+    data, F = build_features(df, use_lead=(args.variant == "L"), lead_long=args.lead_long)
     check_buffer_matches_matrix(data)
     feats = {"A": F["base"], "B": F["base"] + F["pm25"], "L": F["base"] + F["lead"]}[args.variant]
     transform = TargetTransform(args.transform)
@@ -67,7 +70,7 @@ def main():
     if args.stack:
         assert args.variant != "B", "stacking is an alternative to the recursive model, not a complement"
         t = time.time()
-        data, feats = add_stacked_features(data, feats, is_tr, is_te)
+        data, feats = add_stacked_features(data, feats, is_tr, is_te, use_lead=(args.variant == "L"), stage1_rounds=args.stage1_rounds)
         print(f"[final] stage-1 nowcast features added in {time.time()-t:.0f}s -> {len(feats)} features", flush=True)
     X_tr = data.loc[is_tr, feats].to_numpy(float)
     y_tr = data.loc[is_tr, C.TARGET].to_numpy(float)
@@ -109,6 +112,10 @@ def main():
             assert not np.isnan(p).any()
             seed_preds.append(p)
         model_preds[m] = np.mean(seed_preds, axis=0)
+        # per-library test predictions (seed-averaged) so that blend weights can be changed
+        # afterwards with scripts/blend.py without retraining
+        pd.DataFrame({"id": data.loc[is_te, "id"].to_numpy(), C.TARGET: model_preds[m]}).to_csv(
+            C.RESULTS_DIR / f"testpred_{args.variant}{'S' if args.stack else ''}{args.tag}_{m}.csv", index=False)
     pred = sum(w * model_preds[m] for w, m in zip(weights, args.models))
 
     sub = pd.DataFrame({"id": data.loc[is_te, "id"].to_numpy(), C.TARGET: pred})
@@ -118,13 +125,14 @@ def main():
     out.to_csv(args.out, index=False)
     print(f"[final] wrote {args.out}: {len(out):,} rows; mean={out[C.TARGET].mean():.2f} "
           f"std={out[C.TARGET].std():.2f} min={out[C.TARGET].min():.2f} max={out[C.TARGET].max():.2f}", flush=True)
-    info = {"variant": args.variant, "stack": args.stack, "models": args.models, "weights": weights, "rounds": rounds,
+    info = {"variant": args.variant, "stack": args.stack, "lead_long": args.lead_long, "stage1_rounds": args.stage1_rounds,
+            "models": args.models, "weights": weights, "rounds": rounds,
             "seeds": args.seeds, "transform": args.transform, "n_features": len(feats),
             "lgb_params": C.LGB_PARAMS, "xgb_params": XGB_PARAMS, "cat_params": CAT_PARAMS,
             "dropped_features": C.DROP_FEATURES, "winter_weight": C.WINTER_WEIGHT, "winter_months": C.WINTER_MONTHS,
             "features": feats, "output": args.out,
             "per_model_test_mean": {m: float(v.mean()) for m, v in model_preds.items()}}
-    json.dump(info, open(C.RESULTS_DIR / f"final_model_info_{args.variant}{'S' if args.stack else ''}.json", "w"), indent=2)
+    json.dump(info, open(C.RESULTS_DIR / f"final_model_info_{args.variant}{'S' if args.stack else ''}{args.tag}.json", "w"), indent=2)
 
 
 if __name__ == "__main__":

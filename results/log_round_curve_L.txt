@@ -1,0 +1,9 @@
+    [stage1] block 0: fit on 115,884 rows -> out-of-fold nowcast for 38,750
+    [stage1] block 1: fit on 115,886 rows -> out-of-fold nowcast for 38,679
+    [stage1] block 2: fit on 115,885 rows -> out-of-fold nowcast for 38,878
+    [stage1] block 3: fit on 115,872 rows -> out-of-fold nowcast for 38,883
+F1_2014-15 {100: 22.725, 200: 23.308, 300: 23.145, 400: 22.977, 500: 22.865, 600: 22.776, 700: 22.738, 800: 22.695, 900: 22.674, 1000: 22.64, 1100: 22.64, 1200: 22.618, 1300: 22.609, 1400: 22.586, 1500: 22.569, 1600: 22.569, 1700: 22.58, 1800: 22.576, 1900: 22.57, 2000: 22.579, 2100: 22.577, 2200: 22.588, 2300: 22.592, 2400: 22.589, 2500: 22.598}
+    [stage1] block 0: fit on 192,314 rows -> out-of-fold nowcast for 64,262
+    [stage1] block 1: fit on 192,315 rows -> out-of-fold nowcast for 64,479
+    [stage1] block 2: fit on 192,316 rows -> out-of-fold nowcast for 64,628
+    [stage1] block 3: fit on 192,300 rows -> out-of-fold nowcast for 64,558

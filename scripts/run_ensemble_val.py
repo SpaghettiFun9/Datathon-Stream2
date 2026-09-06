@@ -26,18 +26,25 @@ def main():
     ap.add_argument("--lr", type=float, default=0.05)
     ap.add_argument("--models", nargs="+", default=["lgb", "xgb", "cat"])
     ap.add_argument("--stack", action="store_true", help="add out-of-fold nowcast (stage-1) features")
+    ap.add_argument("--fixed-rounds", nargs="*", default=None,
+                    help="train for fixed rounds instead of early stopping, e.g. lgb=2000 xgb=1500 cat=1800 "
+                         "(early stopping can be fooled by a transient dip, see results/round_curve_L.json)")
+    ap.add_argument("--tag", default="", help="suffix for output files")
+    ap.add_argument("--lead-long", action="store_true", help="variant L: longer forward context features")
+    ap.add_argument("--stage1-rounds", type=int, default=None, help="override stage-1 nowcast rounds (default 350)")
     args = ap.parse_args()
+    fixed = {k: int(v) for k, v in (x.split("=") for x in (args.fixed_rounds or []))}
     df = load_all()
-    data, F = build_features(df, use_lead=(args.variant == "L"))
+    data, F = build_features(df, use_lead=(args.variant == "L"), lead_long=args.lead_long)
     feats0 = F["base"] + (F["lead"] if args.variant == "L" else [])
-    tag = args.variant + ("S" if args.stack else "")
+    tag = args.variant + ("S" if args.stack else "") + args.tag
     out = {"variant": tag, "n_features": len(feats0), "folds": []}
     data0 = data
     pooled = {m: [] for m in args.models}; ys = []
     for fold in C.FOLDS:
         tr, va = fold_masks(data0, fold)
         if args.stack:
-            data, feats = add_stacked_features(data0, feats0, tr, va)
+            data, feats = add_stacked_features(data0, feats0, tr, va, use_lead=(args.variant == "L"), stage1_rounds=args.stage1_rounds)
         else:
             data, feats = data0, feats0
         X_tr, y_tr = data.loc[tr, feats].to_numpy(float), data.loc[tr, C.TARGET].to_numpy(float)
@@ -47,14 +54,15 @@ def main():
         preds = {}
         for m in args.models:
             t = time.time()
+            fr_ = fixed.get(m)   # None -> early stopping on the fold; int -> fixed number of rounds
             if m == "lgb":
-                b, it = train_lgb(X_tr, y_tr, X_va, y_va, params=dict(C.LGB_PARAMS, learning_rate=args.lr),
-                                  feature_names=feats, verbose_every=0, weight=w_tr)
+                b, it = train_lgb(X_tr, y_tr, None if fr_ else X_va, None if fr_ else y_va, params=dict(C.LGB_PARAMS, learning_rate=args.lr),
+                                  num_rounds=fr_, feature_names=feats, verbose_every=0, weight=w_tr)
                 p = predict_lgb(b, X_va, num_iteration=it)
             elif m == "xgb":
-                b, it = train_xgb(X_tr, y_tr, X_va, y_va, weight=w_tr); p = predict_xgb(b, X_va, it)
+                b, it = train_xgb(X_tr, y_tr, None if fr_ else X_va, None if fr_ else y_va, num_rounds=fr_, weight=w_tr); p = predict_xgb(b, X_va, it)
             elif m == "cat":
-                b, it = train_cat(X_tr, y_tr, X_va, y_va, weight=w_tr); p = predict_cat(b, X_va)
+                b, it = train_cat(X_tr, y_tr, None if fr_ else X_va, None if fr_ else y_va, num_rounds=fr_, weight=w_tr); p = predict_cat(b, X_va)
             preds[m] = p
             fr[m] = {"rmse": rmse(y_va, p), "best_iter": int(it), "sec": round(time.time() - t)}
             print(f"[ens:{tag}] {fold['name']} {m}: RMSE={fr[m]['rmse']:.4f} iters={it} ({fr[m]['sec']}s)", flush=True)

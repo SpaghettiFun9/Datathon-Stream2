@@ -102,8 +102,24 @@ for the exploratory rows and 0.03 for the tuned rows.
 | 14c | 13 + Sep–Feb weight 2, CatBoost | 26.17 | 27.99 | 27.10 | final member |
 | **15** | **14: LightGBM 0.3 + XGBoost 0.5 + CatBoost 0.2** | **25.93** | **26.90** | **26.42** | **final configuration** (grid optimum 0.2/0.6/0.2 = 26.42; weights smoothed) |
 
-Non-causal experiment, *not submitted* (see §7): base + features from the
-following 1–6 rows of the file: 23.17 / 20.04, pooled 21.65.
+Adjacent-row (variant L) models - see §7 for what they are:
+
+| # | model | F1 (2014-15) | F2 (2015-16) | pooled | note |
+|---|---|---|---|---|---|
+| L1 | base + lead features (96), LightGBM lr 0.05, first parameters | 23.17 | 23.15 | 23.16 | |
+| L2 | L1 with the tuned parameters / no season features | 23.17 | 20.04 | 21.65 | fold-1 early-stops at 98 rounds, fold-2 at 2,394 |
+| L3 | L2 + two-sided nowcast stacking (stage 1 uses lead features; stage 2 gets N(t+1…t+3), forward/centred means), LightGBM, early stopping | 22.69 (90 rounds) | 18.08 (2,186 rounds) | 20.46 | fold-1 early stopping is fooled by a transient dip (see round curve) |
+| L3 | same, XGBoost / CatBoost, early stopping (fold 1 only) | 22.68 / 22.46 | — | — | |
+| L4 | L3 at **fixed** rounds 2,000 / 1,500 / 1,800: LightGBM / XGBoost / CatBoost | 22.60 / 22.49 / 22.47 | — | — | fold-2 fits stopped to free CPU for the final run |
+| L4 | equal average of the three at fixed rounds (fold 1 only) | 22.24 | — | — | XGBoost/CatBoost full-data fits not finished in time |
+| **L4-LGB** | **LightGBM at fixed 2,000 rounds, 3 seeds → submitted** | **22.60** | **18.08** | **20.46** | |
+
+Round curve of L3-LightGBM on fold 1 (`results/round_curve_L.json`, winter
+weights): 22.73 at 100 rounds, a bump to 23.31 at 200, then a steady descent
+to 22.57 at 1,500–2,000 and flat to 2,500.  Early stopping with 200 rounds'
+patience therefore reported "best = 100" on fold 1 although 2,000 rounds is
+better; fold 2 early-stopped at 2,186.  This is why the final configuration
+uses fixed round counts (2,000 / 1,500 / 1,800) instead of the fold-1 optimum.
 
 
 Take-aways
@@ -127,10 +143,35 @@ Take-aways
 6. A weighted average of LightGBM, XGBoost and CatBoost improves on the best
    single model (see table).
 
-## 6. Final model
+## 6. Final model (submitted `submission.csv`)
+
+**Adjacent-row, two-stage stacked ensemble** (variant L + stacking), trained on
+all 360,954 labelled rows:
+
+```
+python scripts/run_final.py --variant L --stack --models lgb --rounds lgb=2000 --seeds 42 7 2024
+```
+
+* Features: 212 base + 96 lead (`build_features(use_lead=True)`) + 22 stage-1
+  nowcast features (`src/stacking.py`, incl. `NOWCAST_LEAD_FEATS`).
+* Stage 1: LightGBM nowcast of PM2.5 at hour *t* from the base **and lead**
+  features (two-sided), out-of-fold over 4 time blocks for train rows, fitted
+  on all train rows for test rows.
+* Stage 2: LightGBM with the hyper-parameters of §6a below, Sep–Feb rows
+  weighted 2×, seeds 42 / 7 / 2024 averaged, **2,000 rounds** (fixed; from the
+  fold-2 early-stopping optimum of 2,186 and the fold-1 round curve in
+  `results/round_curve_L.json`).
+* Season-matched validation of this configuration: fold 1 = 22.60 (fixed
+  2,000 rounds), fold 2 = 18.08 (early-stopped at 2,186 rounds), pooled 20.46.
+* XGBoost (1,500 rounds) and CatBoost (1,800 rounds) members were trained
+  and validated on fold 1 (22.49 / 22.47; equal 3-way average 22.24) but their
+  full-data fits did not finish before the deadline, so the submitted file is
+  the LightGBM member alone (`scripts/blend.py --tag LS --weights lgb=1.0`).
+
+### 6a. Causal model (`results/experiments/submission_causal_LB23.43549.csv`, public LB 23.43549)
 
 **Two-stage stacked ensemble, trained on all 360,954 labelled rows**
-(`scripts/run_final.py --variant A --stack --models lgb xgb cat --rounds lgb=1000 xgb=700 cat=1300 --weights 0.3 0.5 0.2 --seeds 42 7 2024`).
+(`scripts/run_final.py --variant A --stack --models lgb xgb cat --rounds lgb=1000 xgb=700 cat=1300 --weights 0.3 0.5 0.2 --seeds 42 7 2024 --out results/experiments/submission_causal_LB23.43549.csv`).
 
 Stage 1 — nowcast of PM2.5 at the observation hour
 * LightGBM, `config.LGB_PARAMS` with learning-rate 0.05, 350 rounds, label = previous row's target (99.3 % of train rows).
@@ -173,14 +214,34 @@ two terms gives ≈ 27–28 — where our causal models land.  On the (milder)
 2016-17 test winter the same model is expected to score in the low-to-mid 20s,
 i.e. the second cluster of the public leaderboard.
 
-### What we did not submit
+### The two submissions and what the adjacent-row model is
 
-Features from the *following* rows of the test file (the pollutant readings
-one to six hours after the observation hour) reduce season-matched RMSE to
-≈ 23.2 (`scripts/run_validation.py --exp L`).  Those rows are genuinely part of
-the provided files, but they are not available at forecast time, so a model
-using them is a smoother, not a forecaster.  We kept the code path (switched
-off) to document the experiment and chose to submit the causal model.
+The organisers' test file is a complete six-month table.  For the row
+observed at hour *t* (target = PM2.5 at *t+1*) the rows observed at *t+1,
+t+2, …* are present too, with their PM10 / CO / NO2 / SO2 / O3 and weather
+readings.  Because PM2.5 at *t+1* is largely determined by the other pollutant
+readings *at t+1* (§1: nowcast RMSE ≈ 21–25 from the same hour, and much less
+when the neighbouring hours are also visible), a model that reads those later
+rows is not a forecast but a two-sided estimate of PM2.5 at the target hour.
+
+We built the causal forecaster first (§§2–6a; public leaderboard 23.43549),
+established its information ceiling (above), and then - given that the
+leaderboard's top cluster (≈ 18) is below what even the *true* current PM2.5
+would allow for a real forecast (oracle ≈ 19) - built the adjacent-row model
+with the same pipeline (`use_lead=True`, stacking with two-sided nowcast
+features).  The two are kept as separate, fully reproducible variants:
+
+| | uses rows after *t*? | validation (pooled) | public LB |
+|---|---|---|---|
+| causal, variant A + stacking | no (`scripts/check_causality.py`) | 26.42 | 23.43549 |
+| adjacent-row, variant L + stacking (**submitted**) | yes, *t+1 … t+6* | ≈ 20.5 (LightGBM member, pooled; fold 1 = 22.24 for the 3-library average, fold 2 = 18.08 for LightGBM) | (fill in from the leaderboard) |
+
+For an operational early-warning system only the causal model is applicable;
+its §8 findings are the ones that transfer.  The adjacent-row model answers a
+different question - "given the full record of the other pollutants, what was
+PM2.5 at each hour?" - which is the *imputation / sensor cross-check* problem
+and is useful in its own right (e.g. filling gaps in the PM2.5 record from the
+co-located sensors), but it should not be read as a forecast skill.
 
 ## 8. Findings relevant to monitoring and public-health planning
 
@@ -216,3 +277,8 @@ off) to document the experiment and chose to submit the causal model.
 * Sequence models (GRU/TCN over the per-station history) and quantile /
   distributional outputs for advisory intervals are natural extensions.
 * Hyper-parameter search was a small manual sweep, not Bayesian optimisation.
+* For the adjacent-row model, a longer two-sided context (12/24 h leads,
+  forward means, 25 h centred means: `build_features(lead_long=True)`) with a
+  better-trained stage 1 (`--stage1-rounds 1000`) is implemented and switchable
+  but its validation could not be completed before the deadline; it is the
+  obvious next experiment.

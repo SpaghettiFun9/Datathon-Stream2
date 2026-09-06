@@ -1,0 +1,13 @@
+    [stage1] block 0: fit on 115,884 rows -> out-of-fold nowcast for 38,750
+    [stage1] block 1: fit on 115,886 rows -> out-of-fold nowcast for 38,679
+    [stage1] block 2: fit on 115,885 rows -> out-of-fold nowcast for 38,878
+    [stage1] block 3: fit on 115,872 rows -> out-of-fold nowcast for 38,883
+[ens:LS] F1_2014-15 lgb: RMSE=22.6852 iters=90 (27s)
+[ens:LS] F1_2014-15 xgb: RMSE=22.6829 iters=92 (17s)
+[ens:LS] F1_2014-15 cat: RMSE=22.4596 iters=1382 (64s)
+[ens:LS] F1_2014-15 AVG: RMSE=22.1921 top5%=51.12
+    [stage1] block 0: fit on 192,314 rows -> out-of-fold nowcast for 64,262
+    [stage1] block 1: fit on 192,315 rows -> out-of-fold nowcast for 64,479
+    [stage1] block 2: fit on 192,316 rows -> out-of-fold nowcast for 64,628
+    [stage1] block 3: fit on 192,300 rows -> out-of-fold nowcast for 64,558
+[ens:LS] F2_2015-16 lgb: RMSE=18.0829 iters=2186 (613s)

@@ -1,0 +1,3 @@
+    [stage1] block 0: fit on 115,884 rows -> out-of-fold nowcast for 38,750
+    [stage1] block 1: fit on 115,886 rows -> out-of-fold nowcast for 38,679
+    [stage1] block 2: fit on 115,885 rows -> out-of-fold nowcast for 38,878

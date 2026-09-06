@@ -83,13 +83,14 @@ def pm25_features_from_matrix(pm: pd.DataFrame) -> dict:
 
 
 # --------------------------------------------------------------------------- main
-def build_features(df: pd.DataFrame, use_lead: bool = False, drop=None):
+def build_features(df: pd.DataFrame, use_lead: bool = False, drop=None, lead_long: bool = False):
     """
     Parameters
     ----------
     df : stacked train+test frame from `src.data.load_all()`.
     use_lead : also build LEAD features (t+1 / t+2 rows).  Default False.
     drop : feature names to leave out of the "base" list (default config.DROP_FEATURES).
+    lead_long : with use_lead, add longer forward context (12/24 h leads, forward means, 25 h centred mean).
 
     Returns
     -------
@@ -153,6 +154,18 @@ def build_features(df: pd.DataFrame, use_lead: bool = False, drop=None):
                 add(f"{p}_city_mean_lead{k}", cm.shift(-k), lead)
             add(f"{p}_city_max_lead1", pd.DataFrame(np.repeat(x.max(axis=1).to_numpy()[:, None], len(stations), axis=1), index=x.index, columns=x.columns).shift(-1), lead)
             add(f"{p}_city_dev_lead1", (x - cm).shift(-1), lead)
+            if lead_long:
+                add(f"{p}_lead12", x.shift(-12), lead)
+                add(f"{p}_lead24", x.shift(-24), lead)
+                add(f"{p}_leadrm12", fwd.rolling(12, min_periods=1).mean()[::-1].shift(-1), lead)
+                add(f"{p}_leadrm24", fwd.rolling(24, min_periods=1).mean()[::-1].shift(-1), lead)
+                add(f"{p}_leadmax12", fwd.rolling(12, min_periods=1).max()[::-1].shift(-1), lead)
+                add(f"{p}_c25", x.rolling(25, center=True, min_periods=1).mean(), lead)
+                add(f"{p}_c7", x.rolling(7, center=True, min_periods=1).mean(), lead)
+                cfwd = cm[::-1]
+                add(f"{p}_city_mean_leadrm6", cfwd.rolling(6, min_periods=1).mean()[::-1].shift(-1), lead)
+                add(f"{p}_city_mean_leadrm24", cfwd.rolling(24, min_periods=1).mean()[::-1].shift(-1), lead)
+                add(f"{p}_city_mean_c13", cm.rolling(13, center=True, min_periods=1).mean(), lead)
 
     # ---------------------------------------------------------------- weather
     for v in ("TEMP", "PRES", "DEWP", "WSPM"):
@@ -168,6 +181,9 @@ def build_features(df: pd.DataFrame, use_lead: bool = False, drop=None):
             add(f"{v}_lead1", x.shift(-1), lead)
             add(f"{v}_lead2", x.shift(-2), lead)
             add(f"{v}_lead1_diff", x.shift(-1) - x, lead)
+            if lead_long:
+                add(f"{v}_lead6", x.shift(-6), lead)
+                add(f"{v}_leadrm12", x[::-1].rolling(12, min_periods=1).mean()[::-1].shift(-1), lead)
     rain = M["RAIN"]
     add("RAIN_rsum6", rain.rolling(6, min_periods=1).sum(), base)
     add("RAIN_rsum24", rain.rolling(24, min_periods=1).sum(), base)

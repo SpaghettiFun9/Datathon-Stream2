@@ -1,8 +1,13 @@
 """
-Causality check for the submitted feature set: deleting every row after a
-cut-off must leave all features of the rows before the cut-off unchanged.
+Causality check for the CAUSAL feature set (variant A, the model behind
+results/experiments/submission_causal_LB23.43549.csv): deleting every row after
+a cut-off must leave all features of the rows before the cut-off unchanged.
 If any feature peeked at later rows, this would fail.  Also confirms that no
 LEAD feature name leaks into the "base" list.
+
+Variant L (the final submission) deliberately fails this property - it uses
+the following hours' readings - which is exactly why the two variants are kept
+separate and documented separately.
 """
 import sys
 from pathlib import Path
