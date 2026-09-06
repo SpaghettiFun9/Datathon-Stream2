@@ -8,8 +8,9 @@ leaderboard without touching `submission.csv`.
 
 | candidate | what changes vs. `main` | status | file |
 |---|---|---|---|
-| 3-way blend | adds XGBoost (1,500 rounds) and CatBoost (1,800 rounds) members, equal weights; fold-1 validation 22.24 vs 22.60 for LightGBM alone | full-data XGBoost/CatBoost fits in progress | `results/experiments/submission_LS_3way.csv` |
-| long context | `--lead-long` (12/24 h leads, forward means, 25 h centred means, +58 features) and stage-1 nowcast trained for 1,000 rounds instead of 350 | full-data LightGBM fit in progress; season-matched validation not yet run | `results/experiments/submission_LS_long.csv` |
+| 2-way blend | adds the XGBoost member (1,500 rounds, 3 seeds), 0.5 / 0.5; fold-1 validation LightGBM 22.60, XGBoost 22.49 | **ready** | `results/experiments/submission_LS_lgb_xgb.csv` |
+| 3-way blend | adds CatBoost (1,800 rounds) as well, equal weights; fold-1 validation of the 3-way average 22.24 | CatBoost full-data seeds in progress | `results/experiments/submission_LS_3way.csv` |
+| long context | `--lead-long` (12/24 h leads, forward means, 25 h centred means, +58 features) and stage-1 nowcast trained for 1,000 rounds instead of 350 | implemented; full-data fit stopped at the deadline (stage 1 alone takes ~25 min); validation not run | — |
 
 Commands (branch `improve`):
 
@@ -17,6 +18,7 @@ Commands (branch `improve`):
 # 3-way blend of the main configuration (per-library predictions saved by run_final.py)
 python scripts/run_final.py --variant L --stack --models lgb xgb cat --rounds lgb=2000 xgb=1500 cat=1800 --weights 0.34 0.33 0.33 --seeds 42 7 2024 --out results/experiments/submission_LS_3way.csv
 # or, if results/testpred_LS_{lgb,xgb,cat}.csv already exist:
+python scripts/blend.py --tag LS --weights lgb=0.5 xgb=0.5 --out results/experiments/submission_LS_lgb_xgb.csv
 python scripts/blend.py --tag LS --weights lgb=0.34 xgb=0.33 cat=0.33 --out results/experiments/submission_LS_3way.csv
 
 # long-context variant

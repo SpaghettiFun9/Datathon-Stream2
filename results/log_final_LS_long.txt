@@ -4,16 +4,7 @@
 [verify] consecutive rows exactly 1h apart: 0.9931
 [verify] all continuity checks passed
 [recursive] buffer features match vectorised features on 400 hours
-[final] variant=L models=['lgb', 'xgb', 'cat'] weights=[0.34, 0.33, 0.33] features=308 rounds={'lgb': 2000, 'xgb': 1500, 'cat': 1800} seeds=[42, 7, 2024]
+[final] variant=L models=['lgb'] weights=[1.0] features=366 rounds={'lgb': 2000} seeds=[42, 7, 2024]
     [stage1] block 0: fit on 268,866 rows -> out-of-fold nowcast for 89,809
     [stage1] block 1: fit on 268,848 rows -> out-of-fold nowcast for 90,283
     [stage1] block 2: fit on 268,866 rows -> out-of-fold nowcast for 90,433
-    [stage1] block 3: fit on 268,848 rows -> out-of-fold nowcast for 90,429
-[final] stage-1 nowcast features added in 735s -> 330 features
-[final] lgb seed 42 trained in 1057s
-[final] lgb seed 7 trained in 781s
-[final] lgb seed 2024 trained in 649s
-[final] xgb seed 42 trained in 752s
-[final] xgb seed 7 trained in 675s
-[final] xgb seed 2024 trained in 894s
-[final] cat seed 42 trained in 568s
