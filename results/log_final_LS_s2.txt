@@ -12,3 +12,6 @@
 [final] stage-1 nowcast features added in 156s -> 330 features
 [final] xgb seed 11 trained in 121s
 [final] xgb seed 23 trained in 118s
+[final] cat seed 11 trained in 113s
+[final] cat seed 23 trained in 112s
+[final] wrote results/experiments/submission_LS_s2_only.csv: 51,063 rows; mean=94.22 std=99.04 min=0.80 max=793.34

@@ -13,7 +13,7 @@ leaderboard without touching `submission.csv`.
 | weighted 3-way (fold-1 weights) | 0.25 / 0.30 / 0.45 from a grid search on fold-1 validation predictions | superseded: the leaderboard analysis below predicts 17.96, worse than equal weights | `results/experiments/submission_LS_w25_30_45.csv` |
 | **leaderboard-informed blend** | 0.65 LightGBM / 0 XGBoost / 0.35 CatBoost; see "Weight inference" below | **ready; predicted 17.86** | `results/experiments/submission_LS_lb65_0_35.csv` |
 | hedged variant | 0.60 / 0.05 / 0.35 | ready; predicted 17.87 | `results/experiments/submission_LS_lb60_05_35.csv` |
-| 5-seed members | XGBoost and CatBoost with 2 extra seeds (11, 23) averaged into the weighted blend | in progress | `results/experiments/submission_LS_w_5seed.csv` |
+| 5-seed CatBoost | leaderboard-informed blend with the CatBoost member averaged over 5 seeds (42, 7, 2024, 11, 23) | **ready** | `results/experiments/submission_LS_lb65_0_35_cat5.csv` |
 | long context | `--lead-long` (12/24 h leads, forward means, 25 h centred means, +58 features) and stage-1 nowcast trained for 1,000 rounds instead of 350 | implemented; full-data fit stopped at the deadline (stage 1 alone takes ~25 min); validation not run | — |
 
 Commands (branch `improve`):

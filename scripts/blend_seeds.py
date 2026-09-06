@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import config as C
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--member", nargs="+", required=True); ap.add_argument("--weights", nargs="+", required=True)
+ap.add_argument("--member", action="append", required=True); ap.add_argument("--weights", nargs="+", required=True)
 ap.add_argument("--out", required=True)
 a = ap.parse_args()
 W = {k: float(v) for k, v in (x.split("=") for x in a.weights)}; assert abs(sum(W.values()) - 1) < 1e-6
